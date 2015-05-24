@@ -11,7 +11,7 @@
 
 namespace CachetHQ\Cachet\Events;
 
-abstract class Event
+abstract class AbstractEvent
 {
     //
 }

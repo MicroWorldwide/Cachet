@@ -22,8 +22,8 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-        'event.name' => [
-            'EventListener',
+        'CachetHQ\Cachet\Events\CustomerHasSubscribedEvent' => [
+            'CachetHQ\Cachet\Handlers\Events\SendSubscriberVerificationEmailHandler',
         ],
     ];
 
