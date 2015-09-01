@@ -3,7 +3,7 @@
 /*
  * This file is part of Cachet.
  *
- * (c) Cachet HQ <support@cachethq.io>
+ * (c) Alt Three Services Limited
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -82,18 +82,20 @@ return [
     'settings' => [
         /// Application setup
         'app-setup' => [
-            'site-name'           => 'Nombre del sitio',
-            'site-url'            => 'URL del sitio',
-            'site-timezone'       => 'Zona horaria del sitio',
-            'site-locale'         => 'Idioma del sitio',
-            'date-format'         => 'Formato de la fecha',
-            'display-graphs'      => '¿Visualizar gráficas en la página de estado?',
-            'about-this-page'     => 'Sobre esta página',
-            'days-of-incidents'   => '¿Cuántos días de incidentes mostrar?',
-            'banner'              => 'Imagen de inicio',
-            'banner-help'         => 'Se recomienda subir una imagen no más grande de 930px de ancho .',
-            'analytics_google'    => 'Google Analytics code',
-            'analytics_gosquared' => 'GoSquared Analytics code',
+            'site-name'              => 'Nombre del sitio',
+            'site-url'               => 'URL del sitio',
+            'site-timezone'          => 'Zona horaria del sitio',
+            'site-locale'            => 'Idioma del sitio',
+            'date-format'            => 'Formato de la fecha',
+            'display-graphs'         => '¿Visualizar gráficas en la página de estado?',
+            'about-this-page'        => 'Sobre esta página',
+            'days-of-incidents'      => '¿Cuántos días de incidentes mostrar?',
+            'banner'                 => 'Imagen de inicio',
+            'banner-help'            => 'Se recomienda subir una imagen no más grande de 930px de ancho .',
+            'analytics_google'       => 'Google Analytics code',
+            'analytics_gosquared'    => 'GoSquared Analytics code',
+            'analytics_piwik_url'    => 'URL of your Piwik instance (without http(s)://)',
+            'analytics_piwik_siteid' => 'Piwik\'s site id',
         ],
         'security' => [
             'allowed-domains'      => 'Dominios permitidos',
@@ -105,6 +107,7 @@ return [
         'theme' => [
             'background-color' => 'Color de fondo',
             'text-color'       => 'Color de Texto',
+            'dashboard-login'  => 'Show dashboard button in the footer?',
         ],
     ],
 

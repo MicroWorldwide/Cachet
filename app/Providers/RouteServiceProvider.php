@@ -3,7 +3,7 @@
 /*
  * This file is part of Cachet.
  *
- * (c) Cachet HQ <support@cachethq.io>
+ * (c) Alt Three Services Limited
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -53,6 +53,7 @@ class RouteServiceProvider extends ServiceProvider
         $this->app->router->model('metric', 'CachetHQ\Cachet\Models\Metric');
         $this->app->router->model('metric_point', 'CachetHQ\Cachet\Models\MetricPoint');
         $this->app->router->model('setting', 'CachetHQ\Cachet\Models\Setting');
+        $this->app->router->model('subscriber', 'CachetHQ\Cachet\Models\Subscriber');
         $this->app->router->model('user', 'CachetHQ\Cachet\Models\User');
     }
 

@@ -3,7 +3,7 @@
 /*
  * This file is part of Cachet.
  *
- * (c) Cachet HQ <support@cachethq.io>
+ * (c) Alt Three Services Limited
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -11,34 +11,39 @@
 
 namespace CachetHQ\Cachet\Models;
 
+use AltThree\Validator\ValidatingTrait;
+use CachetHQ\Cachet\Presenters\MetricPointPresenter;
 use Illuminate\Database\Eloquent\Model;
 use McCool\LaravelAutoPresenter\HasPresenter;
-use Watson\Validating\ValidatingTrait;
 
-/**
- * @property int            $id
- * @property int            $metric_id
- * @property int            $value
- * @property \Carbon\Carbon $created_at
- * @property \Carbon\Carbon $updated_at
- */
 class MetricPoint extends Model implements HasPresenter
 {
     use ValidatingTrait;
+
+    /**
+     * The attributes that should be casted to native types.
+     *
+     * @var string[]
+     */
+    protected $casts = [
+        'id'        => 'int',
+        'metric_id' => 'int',
+        'value'     => 'int',
+    ];
 
     /**
      * The attributes that are mass assignable.
      *
      * @var string[]
      */
-    protected $fillable = ['metric_id', 'value'];
+    protected $fillable = ['metric_id', 'value', 'created_at'];
 
     /**
      * The validation rules.
      *
      * @var string[]
      */
-    protected $rules = [
+    public $rules = [
         'value' => 'numeric|required',
     ];
 
@@ -49,7 +54,7 @@ class MetricPoint extends Model implements HasPresenter
      */
     public function metric()
     {
-        return $this->belongsTo('CachetHQ\Cachet\Models\Metric', 'id', 'metric_id');
+        return $this->belongsTo(Metric::class, 'id', 'metric_id');
     }
 
     /**
@@ -59,6 +64,6 @@ class MetricPoint extends Model implements HasPresenter
      */
     public function getPresenterClass()
     {
-        return 'CachetHQ\Cachet\Presenters\MetricPointPresenter';
+        return MetricPointPresenter::class;
     }
 }

@@ -3,7 +3,7 @@
 /*
  * This file is part of Cachet.
  *
- * (c) Cachet HQ <support@cachethq.io>
+ * (c) Alt Three Services Limited
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -63,7 +63,7 @@ return [
     |
     */
 
-    'from' => ['address' => null, 'name' => null],
+    'from' => ['address' => env('MAIL_ADDRESS'), 'name' => env('MAIL_NAME')],
 
     /*
     |--------------------------------------------------------------------------

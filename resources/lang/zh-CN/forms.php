@@ -3,7 +3,7 @@
 /*
  * This file is part of Cachet.
  *
- * (c) Cachet HQ <support@cachethq.io>
+ * (c) Alt Three Services Limited
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -21,6 +21,8 @@ return [
         'site_timezone'    => '选择您的时区',
         'site_locale'      => '选择您的语言',
         'enable_google2fa' => '启用谷歌双因素身份验证',
+        'cache_driver'     => '缓存驱动',
+        'session_driver'   => '会话驱动',
     ],
 
     // Login form fields
@@ -30,19 +32,23 @@ return [
         '2fauth'        => '双因素验证代码',
         'invalid'       => '无效的电子邮件或密码。',
         'invalid-token' => '无效的令牌。',
-        'cookies'       => 'You must enable cookies to login.',
+        'cookies'       => '您必须启用 cookies 来进行登录。',
     ],
 
     // Incidents form fields
     'incidents' => [
-        'name'         => '事件名',
-        'status'       => '状态',
-        'component'    => '组件',
-        'message'      => '消息',
-        'message-help' => '您可以使用Markdown语言。',
-        'scheduled_at' => '什么时间安排维护？',
-
-        'templates' => [
+        'name'               => '事件名',
+        'status'             => '状态',
+        'component'          => '组件',
+        'message'            => '消息',
+        'message-help'       => '您可以使用Markdown语言。',
+        'scheduled_at'       => '什么时间安排维护？',
+        'incident_time'      => '这次事件是什么时候发生的？',
+        'notify_subscribers' => '通知订阅者',
+        'visibility'         => '事件的可见性',
+        'public'             => '公共可见',
+        'logged_in_only'     => '仅登录用户可见',
+        'templates'          => [
             'name'     => '事件名',
             'template' => '模板',
         ],
@@ -84,18 +90,22 @@ return [
     'settings' => [
         /// Application setup
         'app-setup' => [
-            'site-name'           => '站点名称',
-            'site-url'            => '站点URL',
-            'site-timezone'       => '站点时区',
-            'site-locale'         => '站点语言',
-            'date-format'         => '日期格式',
-            'display-graphs'      => '是否在状态页上显示图表',
-            'about-this-page'     => '关于这个页面',
-            'days-of-incidents'   => '显示多少天的事件？',
-            'banner'              => '横幅图像',
-            'banner-help'         => '建议上传文件宽度不大于930像素。',
-            'analytics_google'    => 'Google Analytics code',
-            'analytics_gosquared' => 'GoSquared Analytics code',
+            'site-name'              => '站点名称',
+            'site-url'               => '站点URL',
+            'site-timezone'          => '站点时区',
+            'site-locale'            => '站点语言',
+            'date-format'            => '日期格式',
+            'incident-date-format'   => '事件的时间戳格式',
+            'display-graphs'         => '是否在状态页上显示图表',
+            'about-this-page'        => '关于这个页面',
+            'days-of-incidents'      => '显示多少天的事件？',
+            'banner'                 => '横幅图像',
+            'banner-help'            => '建议上传文件宽度不大于930像素。',
+            'analytics_google'       => 'Google Analytics 代码',
+            'analytics_gosquared'    => 'GoSquared Analytics 代码',
+            'analytics_piwik_url'    => '输入Piwik实例的URL(不含http(s)://)',
+            'analytics_piwik_siteid' => 'Piwik 的站点 id',
+            'subscribers'            => '允许用户订阅邮件通知吗?',
         ],
         'security' => [
             'allowed-domains'      => '允许的域',
@@ -107,6 +117,7 @@ return [
         'theme' => [
             'background-color' => '背景色',
             'text-color'       => '文字颜色',
+            'dashboard-login'  => 'Show dashboard button in the footer?',
         ],
     ],
 

@@ -3,7 +3,7 @@
 /*
  * This file is part of Cachet.
  *
- * (c) Cachet HQ <support@cachethq.io>
+ * (c) Alt Three Services Limited
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -13,18 +13,19 @@ namespace CachetHQ\Cachet\Http\Middleware;
 
 use Closure;
 use Illuminate\Contracts\Auth\Guard;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class Authenticate
 {
     /**
-     * The Guard implementation.
+     * The authentication guard instance.
      *
      * @var \Illuminate\Contracts\Auth\Guard
      */
     protected $auth;
 
     /**
-     * Create a new filter instance.
+     * Create a new authenticate middleware instance.
      *
      * @param \Illuminate\Contracts\Auth\Guard $auth
      */
@@ -44,11 +45,7 @@ class Authenticate
     public function handle($request, Closure $next)
     {
         if ($this->auth->guest()) {
-            if ($request->ajax()) {
-                return response('Unauthorized.', 401);
-            } else {
-                return redirect()->guest('auth/login');
-            }
+            throw new HttpException(401);
         }
 
         return $next($request);

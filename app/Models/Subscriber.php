@@ -3,7 +3,7 @@
 /*
  * This file is part of Cachet.
  *
- * (c) Cachet HQ <support@cachethq.io>
+ * (c) Alt Three Services Limited
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -11,29 +11,32 @@
 
 namespace CachetHQ\Cachet\Models;
 
+use AltThree\Validator\ValidatingTrait;
+use CachetHQ\Cachet\Presenters\SubscriberPresenter;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Watson\Validating\ValidatingTrait;
+use McCool\LaravelAutoPresenter\HasPresenter;
 
-/**
- * @property int            $id
- * @property string         $email
- * @property \Carbon\Carbon $created_at
- * @property \Carbon\Carbon $updated_at
- * @property \Carbon\Carbon $deleted_at
- */
-class Subscriber extends Model
+class Subscriber extends Model implements HasPresenter
 {
-    use SoftDeletes, ValidatingTrait;
+    use ValidatingTrait;
 
     /**
-     * The validation rules.
+     * The attributes that should be casted to native types.
      *
      * @var string[]
      */
-    protected $rules = [
-        'email' => 'required|email',
+    protected $casts = [
+        'id'          => 'int',
+        'email'       => 'string',
+        'verify_code' => 'string',
     ];
+
+    /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
+    protected $dates = ['verified_at'];
 
     /**
      * The fillable properties.
@@ -41,4 +44,57 @@ class Subscriber extends Model
      * @var string[]
      */
     protected $fillable = ['email'];
+
+    /**
+     * The validation rules.
+     *
+     * @var string[]
+     */
+    public $rules = [
+        'email' => 'required|email',
+    ];
+
+    /**
+     * Overrides the models boot method.
+     */
+    public static function boot()
+    {
+        parent::boot();
+
+        self::creating(function ($user) {
+            if (!$user->verify_code) {
+                $user->verify_code = self::generateVerifyCode();
+            }
+        });
+    }
+
+    /**
+     * Determines if the subscriber is verified.
+     *
+     * @return bool
+     */
+    public function verified()
+    {
+        return !is_null($this->verified_at);
+    }
+
+    /**
+     * Returns an new verify code.
+     *
+     * @return string
+     */
+    public static function generateVerifyCode()
+    {
+        return str_random(42);
+    }
+
+    /**
+     * Get the presenter class.
+     *
+     * @return string
+     */
+    public function getPresenterClass()
+    {
+        return SubscriberPresenter::class;
+    }
 }

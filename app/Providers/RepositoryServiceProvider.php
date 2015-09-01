@@ -3,7 +3,7 @@
 /*
  * This file is part of Cachet.
  *
- * (c) Cachet HQ <support@cachethq.io>
+ * (c) Alt Three Services Limited
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -11,6 +11,10 @@
 
 namespace CachetHQ\Cachet\Providers;
 
+use CachetHQ\Cachet\Repositories\Metric\MetricRepository;
+use CachetHQ\Cachet\Repositories\Metric\MySqlRepository as MetricMySqlRepository;
+use CachetHQ\Cachet\Repositories\Metric\PgSqlRepository as MetricPgSqlRepository;
+use CachetHQ\Cachet\Repositories\Metric\SqliteRepository as MetricSqliteRepository;
 use Illuminate\Support\ServiceProvider;
 
 class RepositoryServiceProvider extends ServiceProvider
@@ -22,21 +26,30 @@ class RepositoryServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind(
-            'CachetHQ\Cachet\Repositories\Component\ComponentRepository',
-            'CachetHQ\Cachet\Repositories\Component\EloquentComponentRepository'
-        );
-        $this->app->bind(
-            'CachetHQ\Cachet\Repositories\Incident\IncidentRepository',
-            'CachetHQ\Cachet\Repositories\Incident\EloquentIncidentRepository'
-        );
-        $this->app->bind(
-            'CachetHQ\Cachet\Repositories\Metric\MetricRepository',
-            'CachetHQ\Cachet\Repositories\Metric\EloquentMetricRepository'
-        );
-        $this->app->bind(
-            'CachetHQ\Cachet\Repositories\MetricPoint\MetricPointRepository',
-            'CachetHQ\Cachet\Repositories\MetricPoint\EloquentMetricPointRepository'
-        );
+        $this->registerMetricRepository();
+    }
+
+    /**
+     * Register the metric repository.
+     *
+     * @return void
+     */
+    protected function registerMetricRepository()
+    {
+        $this->app->singleton('cachet.metricrepository', function ($app) {
+            $dbDriver = $app['config']->get('database.default');
+
+            if ($dbDriver == 'mysql') {
+                $repository = new MetricMySqlRepository();
+            } elseif ($dbDriver == 'pgsql') {
+                $repository = new MetricPgSqlRepository();
+            } elseif ($dbDriver == 'sqlite') {
+                $repository = new MetricSqliteRepository();
+            }
+
+            return new MetricRepository($repository);
+        });
+
+        $this->app->alias('cachet.metricrepository', 'CachetHQ\Cachet\Repositories\Metric\MetricRepository');
     }
 }

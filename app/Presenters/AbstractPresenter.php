@@ -3,7 +3,7 @@
 /*
  * This file is part of Cachet.
  *
- * (c) Cachet HQ <support@cachethq.io>
+ * (c) Alt Three Services Limited
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -27,7 +27,9 @@ abstract class AbstractPresenter extends BaseLaravelAutoPresenter implements Arr
     /**
      * Create a incident presenter instance.
      *
-     * @param object $resource
+     * @param \Illuminate\Database\Eloquent\Model $resource
+     *
+     * @return void
      */
     public function __construct($resource)
     {

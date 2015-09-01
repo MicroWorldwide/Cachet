@@ -3,7 +3,7 @@
 /*
  * This file is part of Cachet.
  *
- * (c) Cachet HQ <support@cachethq.io>
+ * (c) Alt Three Services Limited
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -61,7 +61,7 @@ return [
     |
     */
 
-    'locale' => 'en',
+    'locale' => env('APP_LOCALE', 'en'),
 
     /*
     |--------------------------------------------------------------------------
@@ -89,7 +89,7 @@ return [
 
     'key' => env('APP_KEY', 'SomeRandomString'),
 
-    'cipher' => MCRYPT_RIJNDAEL_128,
+    'cipher' => 'AES-256-CBC',
 
     /*
     |--------------------------------------------------------------------------
@@ -104,7 +104,7 @@ return [
     |
     */
 
-    'log' => 'daily',
+    'log' => env('LOGGING_MODE', 'daily'),
 
     /*
     |--------------------------------------------------------------------------
@@ -149,9 +149,12 @@ return [
         /*
          * Packages Service Providers...
          */
+        'AltThree\Emoji\EmojiServiceProvider',
+        'Barryvdh\Cors\CorsServiceProvider',
         'Fideloper\Proxy\TrustedProxyServiceProvider',
         'GrahamCampbell\Binput\BinputServiceProvider',
         'GrahamCampbell\Exceptions\ExceptionsServiceProvider',
+        'GrahamCampbell\Core\CoreServiceProvider',
         'GrahamCampbell\Markdown\MarkdownServiceProvider',
         'GrahamCampbell\Security\SecurityServiceProvider',
         'GrahamCampbell\Throttle\ThrottleServiceProvider',
@@ -159,21 +162,17 @@ return [
         'McCool\LaravelAutoPresenter\LaravelAutoPresenterServiceProvider',
         'PragmaRX\Google2FA\Vendor\Laravel\ServiceProvider',
         'Roumen\Feed\FeedServiceProvider',
-        'Barryvdh\Cors\CorsServiceProvider',
 
         /*
          * Application Service Providers...
          */
         'CachetHQ\Cachet\Providers\AppServiceProvider',
-        'CachetHQ\Cachet\Providers\BusServiceProvider',
         'CachetHQ\Cachet\Providers\ComposerServiceProvider',
         'CachetHQ\Cachet\Providers\ConfigServiceProvider',
         'CachetHQ\Cachet\Providers\ConsoleServiceProvider',
         'CachetHQ\Cachet\Providers\EventServiceProvider',
         'CachetHQ\Cachet\Providers\RepositoryServiceProvider',
         'CachetHQ\Cachet\Providers\RouteServiceProvider',
-        'CachetHQ\Cachet\Providers\SegmentServiceProvider',
-        'CachetHQ\Segment\SegmentServiceProvider',
 
     ],
 
@@ -223,8 +222,8 @@ return [
         'Validator' => 'Illuminate\Support\Facades\Validator',
         'View'      => 'Illuminate\Support\Facades\View',
 
-        'Setting'   => 'CachetHQ\Cachet\Facades\Setting',
-        'Str'       => 'Illuminate\Support\Str',
+        'Setting' => 'CachetHQ\Cachet\Facades\Setting',
+        'Str'     => 'Illuminate\Support\Str',
 
     ],
 

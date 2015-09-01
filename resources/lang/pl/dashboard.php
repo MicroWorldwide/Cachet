@@ -3,7 +3,7 @@
 /*
  * This file is part of Cachet.
  *
- * (c) Cachet HQ <support@cachethq.io>
+ * (c) Alt Three Services Limited
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -127,7 +127,7 @@ return [
             'success' => 'Dodano członka zespołu.',
             'failure' => 'Coś poszło nie tak z dodawaniem do zespołu.',
         ],
-        'edit'        => [
+        'edit' => [
             'title'   => 'Aktualizuj profil',
             'success' => 'Profil zaktualizowany.',
             'failure' => 'Coś poszło nie tak przy aktualizacji.',
@@ -172,7 +172,7 @@ return [
     'logout'      => 'Wyloguj',
 
     // Notifications
-    'notifications'     => [
+    'notifications' => [
         'notifications' => 'Powiadomienia',
         'awesome'       => 'Super.',
         'whoops'        => 'Ojej.',

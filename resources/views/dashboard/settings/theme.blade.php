@@ -2,8 +2,8 @@
 
 @section('content')
     <div class="content-panel">
-        @if(isset($subMenu))
-        @include('partials.dashboard.sub-sidebar')
+        @if(isset($sub_menu))
+        @include('dashboard.partials.sub-sidebar')
         @endif
         <div class="content-wrapper">
             <div class="header sub-header" id="theme">
@@ -15,7 +15,7 @@
                 <div class="col-sm-12">
                     <form name="SettingsForm" class="form-vertical" role="form" action="/dashboard/settings" method="POST">
                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                        @include('partials.dashboard.errors')
+                        @include('dashboard.partials.errors')
                         <fieldset>
                             <div class="row">
                                 <div class="col-xs-6">
@@ -28,6 +28,14 @@
                                     <div class="form-group">
                                         <label>{{ trans('forms.settings.theme.text-color') }}</label>
                                         <input type="text" class="form-control color-code" name="style.text_color" value="{{ Setting::get('style_text_color') }}">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <label>{{ trans('forms.settings.theme.dashboard-login') }}</label>
+                                        <input type="checkbox" value="1" name="dashboard_login_link" class="form-control" {{ Setting::get('dashboard_login_link') ? 'checked' : null }}>
                                     </div>
                                 </div>
                             </div>

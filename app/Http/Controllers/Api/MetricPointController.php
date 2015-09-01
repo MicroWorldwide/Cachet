@@ -3,7 +3,7 @@
 /*
  * This file is part of Cachet.
  *
- * (c) Cachet HQ <support@cachethq.io>
+ * (c) Alt Three Services Limited
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -11,64 +11,72 @@
 
 namespace CachetHQ\Cachet\Http\Controllers\Api;
 
-use CachetHQ\Cachet\Repositories\MetricPoint\MetricPointRepository;
+use CachetHQ\Cachet\Models\Metric;
+use CachetHQ\Cachet\Models\MetricPoint;
+use Carbon\Carbon;
+use Exception;
 use GrahamCampbell\Binput\Facades\Binput;
 
 class MetricPointController extends AbstractApiController
 {
     /**
-     * The metric point repository instance.
-     *
-     * @var \CachetHQ\Cachet\Repositories\MetricPoint\MetricPointRepository
-     */
-    protected $metricPoint;
-
-    /**
-     * Create a new metric point controller instance.
-     *
-     * @param \CachetHQ\Cachet\Repositories\MetricPoint\MetricPointRepository $metricPoint
-     */
-    public function __construct(MetricPointRepository $metricPoint)
-    {
-        $this->metricPoint = $metricPoint;
-    }
-
-    /**
      * Get a single metric point.
      *
-     * @param int $id
+     * @param \CachetHQ\Cachet\Models\Metric      $metric
+     * @param \CachetHQ\Cachet\Models\MetricPoint $metricPoint
      *
-     * @return \CachetHQ\Cachet\Models\MetricPoint
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function getMetricPoints($id)
+    public function getMetricPoints(Metric $metric, MetricPoint $metricPoint)
     {
-        return $this->item($this->metricPoint->findOrFail($id));
+        return $this->item($metricPoint);
     }
 
     /**
      * Create a new metric point.
      *
-     * @param int $id
+     * @param \CachetHQ\Cachet\Models\Metric $metric
      *
-     * @return \CachetHQ\Cachet\Models\MetricPoint
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function postMetricPoints($id)
+    public function postMetricPoints(Metric $metric)
     {
-        return $this->item($this->metricPoint->create($id, Binput::all()));
+        $metricPointData = Binput::all();
+        $metricPointData['metric_id'] = $metric->id;
+
+        if ($timestamp = array_pull($metricPointData, 'timestamp')) {
+            $pointTimestamp = Carbon::createFromFormat('U', $timestamp);
+            $metricPointData['created_at'] = $pointTimestamp->format('Y-m-d H:i:s');
+        }
+
+        try {
+            $metricPoint = MetricPoint::create($metricPointData);
+        } catch (Exception $e) {
+            throw new BadRequestHttpException();
+        }
+
+        return $this->item($metricPoint);
     }
 
     /**
      * Updates a metric point.
      *
-     * @param int $metricId
-     * @param int $pointId
+     * @param \CachetHQ\Cachet\Models\Metric      $metric
+     * @param \CachetHQ\Cachet\Models\MetircPoint $metricPoint
      *
-     * @return \CachetHQ\Cachet\Models\MetricPoint
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function putMetricPoint($metricId, $pointId)
+    public function putMetricPoint(Metric $metric, MetricPoint $metricPoint)
     {
-        $metricPoint = $this->metricPoint->findOrFail($pointId);
-        $metricPoint->update(Binput::all());
+        $metricPointData = Binput::all();
+        $metricPointData['metric_id'] = $metric->id;
+
+        if ($timestamp = array_pull($metricPointData, 'timestamp')) {
+            $pointTimestamp = Carbon::createFromFormat('U', $timestamp);
+            $metricPointData['created_at'] = $pointTimestamp->format('Y-m-d H:i:s');
+        }
+
+        $metricPoint->update($metricPointData);
 
         return $this->item($metricPoint);
     }
@@ -76,14 +84,14 @@ class MetricPointController extends AbstractApiController
     /**
      * Destroys a metric point.
      *
-     * @param int $metricId
-     * @param int $pointId
+     * @param \CachetHQ\Cachet\Models\Metric      $metric
+     * @param \CachetHQ\Cachet\Models\MetricPoint $metricPoint
      *
-     * @return \Dingo\Api\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function deleteMetricPoint($metricId, $pointId)
+    public function deleteMetricPoint(Metric $metric, MetricPoint $metricPoint)
     {
-        $this->metricPoint->destroy($pointId);
+        $metricPoint->delete();
 
         return $this->noContent();
     }

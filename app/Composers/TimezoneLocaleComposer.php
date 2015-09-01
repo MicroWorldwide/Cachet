@@ -3,7 +3,7 @@
 /*
  * This file is part of Cachet.
  *
- * (c) Cachet HQ <support@cachethq.io>
+ * (c) Alt Three Services Limited
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -13,15 +13,17 @@ namespace CachetHQ\Cachet\Composers;
 
 use DateTime;
 use DateTimeZone;
+use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Config;
-use Illuminate\View\View;
 
 class TimezoneLocaleComposer
 {
     /**
      * Timezones and Locales composer.
      *
-     * @param \Illuminate\View\View $view
+     * @param \Illuminate\Contracts\View\View $view
+     *
+     * @return void
      */
     public function compose(View $view)
     {
@@ -65,9 +67,7 @@ class TimezoneLocaleComposer
             }
         }
 
-        $view->with([
-            'timezones' => $timezones,
-            'langs'     => $langs,
-        ]);
+        $view->withTimezones($timezones);
+        $view->withLangs($langs);
     }
 }

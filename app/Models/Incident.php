@@ -3,7 +3,7 @@
 /*
  * This file is part of Cachet.
  *
- * (c) Cachet HQ <support@cachethq.io>
+ * (c) Alt Three Services Limited
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -11,57 +11,16 @@
 
 namespace CachetHQ\Cachet\Models;
 
+use AltThree\Validator\ValidatingTrait;
+use CachetHQ\Cachet\Presenters\IncidentPresenter;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use McCool\LaravelAutoPresenter\HasPresenter;
-use Watson\Validating\ValidatingTrait;
 
-/**
- * @property int            $id
- * @property int            $component_id
- * @property string         $name
- * @property int            $status
- * @property string         $message
- * @property int            $user_id
- * @property \Carbon\Carbon $scheduled_at
- * @property \Carbon\Carbon $created_at
- * @property \Carbon\Carbon $updated_at
- * @property \Carbon\Carbon $deleted_at
- * @property string         $humanStatus
- */
 class Incident extends Model implements HasPresenter
 {
     use SoftDeletes, ValidatingTrait;
-
-    /**
-     * The validation rules.
-     *
-     * @var string[]
-     */
-    protected $rules = [
-        'user_id'      => 'required|integer',
-        'component_id' => 'integer',
-        'name'         => 'required',
-        'status'       => 'required|integer',
-        'message'      => 'required',
-    ];
-
-    /**
-     * The fillable properties.
-     *
-     * @var string[]
-     */
-    protected $fillable = [
-        'user_id',
-        'component_id',
-        'name',
-        'status',
-        'message',
-        'scheduled_at',
-        'created_at',
-        'updated_at',
-    ];
 
     /**
      * The accessors to append to the model's serialized form.
@@ -71,11 +30,62 @@ class Incident extends Model implements HasPresenter
     protected $appends = ['human_status'];
 
     /**
+     * The attributes that should be casted to native types.
+     *
+     * @var string[]
+     */
+    protected $casts = [
+        'id'      => 'int',
+        'visible' => 'integer',
+    ];
+
+    /**
      * The attributes that should be mutated to dates.
      *
      * @var string[]
      */
     protected $dates = ['scheduled_at', 'deleted_at'];
+
+    /**
+     * The fillable properties.
+     *
+     * @var string[]
+     */
+    protected $fillable = [
+        'component_id',
+        'name',
+        'status',
+        'visible',
+        'message',
+        'scheduled_at',
+        'created_at',
+        'updated_at',
+    ];
+
+    /**
+     * The validation rules.
+     *
+     * @var string[]
+     */
+    public $rules = [
+        'component_id' => 'integer',
+        'name'         => 'required',
+        'status'       => 'required|integer',
+        'visible'      => 'required|boolean',
+        'message'      => 'required',
+    ];
+
+    /**
+     * Finds all visible incidents.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeVisible($query)
+    {
+        return $query->where('visible', 1);
+    }
 
     /**
      * Finds all scheduled incidents (maintenance).
@@ -110,7 +120,7 @@ class Incident extends Model implements HasPresenter
      */
     public function component()
     {
-        return $this->belongsTo('CachetHQ\Cachet\Models\Component', 'component_id', 'id');
+        return $this->belongsTo(Component::class, 'component_id', 'id');
     }
 
     /**
@@ -142,6 +152,6 @@ class Incident extends Model implements HasPresenter
      */
     public function getPresenterClass()
     {
-        return 'CachetHQ\Cachet\Presenters\IncidentPresenter';
+        return IncidentPresenter::class;
     }
 }

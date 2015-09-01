@@ -3,7 +3,7 @@
 /*
  * This file is part of Cachet.
  *
- * (c) Cachet HQ <support@cachethq.io>
+ * (c) Alt Three Services Limited
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -11,56 +11,16 @@
 
 namespace CachetHQ\Cachet\Models;
 
+use AltThree\Validator\ValidatingTrait;
+use CachetHQ\Cachet\Presenters\ComponentPresenter;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use McCool\LaravelAutoPresenter\HasPresenter;
-use Watson\Validating\ValidatingTrait;
 
-/**
- * @property int            $id
- * @property int            $user_id
- * @property string         $name
- * @property string         $description
- * @property int            $status
- * @property string         $link
- * @property int            $order
- * @property int            $group_id
- * @property \Carbon\Carbon $created_at
- * @property \Carbon\Carbon $updated_at
- * @property \Carbon\Carbon $deleted_at
- */
 class Component extends Model implements HasPresenter
 {
     use SoftDeletes, ValidatingTrait;
-
-    /**
-     * The validation rules.
-     *
-     * @var string[]
-     */
-    protected $rules = [
-        'user_id' => 'integer|required',
-        'name'    => 'required',
-        'status'  => 'integer|required',
-        'link'    => 'url',
-    ];
-
-    /**
-     * The fillable properties.
-     *
-     * @var string[]
-     */
-    protected $fillable = [
-        'name',
-        'description',
-        'status',
-        'user_id',
-        'tags',
-        'link',
-        'order',
-        'group_id',
-    ];
 
     /**
      * List of attributes that have default values.
@@ -75,11 +35,50 @@ class Component extends Model implements HasPresenter
     ];
 
     /**
+     * The attributes that should be casted to native types.
+     *
+     * @var string[]
+     */
+    protected $casts = [
+        'id'          => 'int',
+        'order'       => 'int',
+        'group_id'    => 'int',
+        'description' => 'string',
+        'link'        => 'string',
+    ];
+
+    /**
      * The attributes that should be mutated to dates.
      *
      * @var array
      */
     protected $dates = ['deleted_at'];
+
+    /**
+     * The fillable properties.
+     *
+     * @var string[]
+     */
+    protected $fillable = [
+        'name',
+        'description',
+        'status',
+        'tags',
+        'link',
+        'order',
+        'group_id',
+    ];
+
+    /**
+     * The validation rules.
+     *
+     * @var string[]
+     */
+    public $rules = [
+        'name'   => 'required|string',
+        'status' => 'integer|required',
+        'link'   => 'url',
+    ];
 
     /**
      * Components can belong to a group.
@@ -88,7 +87,7 @@ class Component extends Model implements HasPresenter
      */
     public function group()
     {
-        return $this->belongsTo('CachetHQ\Cachet\Models\ComponentGroup', 'group_id', 'id');
+        return $this->belongsTo(ComponentGroup::class, 'group_id', 'id');
     }
 
     /**
@@ -98,7 +97,7 @@ class Component extends Model implements HasPresenter
      */
     public function incidents()
     {
-        return $this->hasMany('CachetHQ\Cachet\Models\Incident', 'component_id', 'id');
+        return $this->hasMany(Incident::class, 'component_id', 'id');
     }
 
     /**
@@ -108,7 +107,7 @@ class Component extends Model implements HasPresenter
      */
     public function tags()
     {
-        return $this->belongsToMany('CachetHQ\Cachet\Models\Tag');
+        return $this->belongsToMany(Tag::class);
     }
 
     /**
@@ -168,6 +167,6 @@ class Component extends Model implements HasPresenter
      */
     public function getPresenterClass()
     {
-        return 'CachetHQ\Cachet\Presenters\ComponentPresenter';
+        return ComponentPresenter::class;
     }
 }

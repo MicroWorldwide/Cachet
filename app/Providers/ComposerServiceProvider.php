@@ -3,7 +3,7 @@
 /*
  * This file is part of Cachet.
  *
- * (c) Cachet HQ <support@cachethq.io>
+ * (c) Alt Three Services Limited
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -11,15 +11,34 @@
 
 namespace CachetHQ\Cachet\Providers;
 
+use CachetHQ\Cachet\Composers\AppComposer;
+use CachetHQ\Cachet\Composers\CurrentUserComposer;
 use CachetHQ\Cachet\Composers\DashboardComposer;
-use CachetHQ\Cachet\Composers\IndexComposer;
-use CachetHQ\Cachet\Composers\LoggedUserComposer;
+use CachetHQ\Cachet\Composers\MetricsComposer;
+use CachetHQ\Cachet\Composers\StatusPageComposer;
 use CachetHQ\Cachet\Composers\ThemeComposer;
 use CachetHQ\Cachet\Composers\TimezoneLocaleComposer;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Support\ServiceProvider;
 
 class ComposerServiceProvider extends ServiceProvider
 {
+    /**
+     * Boot the service provider.
+     *
+     * @param \Illuminate\Contracts\View\Factory $factory
+     */
+    public function boot(Factory $factory)
+    {
+        $factory->composer('*', AppComposer::class);
+        $factory->composer('*', CurrentUserComposer::class);
+        $factory->composer(['index'], MetricsComposer::class);
+        $factory->composer(['index', 'incident', 'subscribe'], StatusPageComposer::class);
+        $factory->composer(['index', 'incident', 'subscribe'], ThemeComposer::class);
+        $factory->composer('dashboard.*', DashboardComposer::class);
+        $factory->composer(['setup', 'dashboard.settings.app-setup'], TimezoneLocaleComposer::class);
+    }
+
     /**
      * Register the service provider.
      *
@@ -27,10 +46,6 @@ class ComposerServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->view->composer('*', LoggedUserComposer::class);
-        $this->app->view->composer('index', IndexComposer::class);
-        $this->app->view->composer('index', ThemeComposer::class);
-        $this->app->view->composer('dashboard.*', DashboardComposer::class);
-        $this->app->view->composer(['setup', 'dashboard.settings.app-setup'], TimezoneLocaleComposer::class);
+        //
     }
 }

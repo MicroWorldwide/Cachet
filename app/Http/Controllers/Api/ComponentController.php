@@ -3,7 +3,7 @@
 /*
  * This file is part of Cachet.
  *
- * (c) Cachet HQ <support@cachethq.io>
+ * (c) Alt Three Services Limited
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -11,39 +11,26 @@
 
 namespace CachetHQ\Cachet\Http\Controllers\Api;
 
+use CachetHQ\Cachet\Models\Component;
 use CachetHQ\Cachet\Models\Tag;
-use CachetHQ\Cachet\Repositories\Component\ComponentRepository;
+use Exception;
 use GrahamCampbell\Binput\Facades\Binput;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class ComponentController extends AbstractApiController
 {
     /**
-     * The component repository instance.
-     *
-     * @var \CachetHQ\Cachet\Repositories\Component\ComponentRepository
-     */
-    protected $component;
-
-    /**
-     * Create a new component controller instance.
-     *
-     * @param \CachetHQ\Cachet\Repositories\Component\ComponentRepository $component
-     */
-    public function __construct(ComponentRepository $component)
-    {
-        $this->component = $component;
-    }
-
-    /**
      * Get all components.
      *
-     * @return \Illuminate\Database\Eloquent\Collection
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     *
+     * @return \Illuminate\Http\JsonResponse
      */
     public function getComponents(Request $request)
     {
-        $components = $this->component->paginate(Binput::get('per_page', 20));
+        $components = Component::paginate(Binput::get('per_page', 20));
 
         return $this->paginator($components, $request);
     }
@@ -51,13 +38,13 @@ class ComponentController extends AbstractApiController
     /**
      * Get a single component.
      *
-     * @param int $id
+     * @param \CachetHQ\Cachet\Models\Component $component
      *
-     * @return \CachetHQ\Cachet\Models\Component
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function getComponent($id)
+    public function getComponent(Component $component)
     {
-        return $this->item($this->component->findOrFail($id));
+        return $this->item($component);
     }
 
     /**
@@ -65,14 +52,17 @@ class ComponentController extends AbstractApiController
      *
      * @param \Illuminate\Contracts\Auth\Guard $auth
      *
-     * @return \CachetHQ\Cachet\Models\Component
+     * @return \Illuminate\Http\JsonResponse
      */
     public function postComponents(Guard $auth)
     {
-        $component = $this->component->create(
-            $auth->user()->id,
-            Binput::except('tags')
-        );
+        $componentData = Binput::except('tags');
+
+        try {
+            $component = Component::create($componentData);
+        } catch (Exception $e) {
+            throw new BadRequestHttpException();
+        }
 
         if (Binput::has('tags')) {
             // The component was added successfully, so now let's deal with the tags.
@@ -94,22 +84,24 @@ class ComponentController extends AbstractApiController
     /**
      * Update an existing component.
      *
-     * @param int $id
+     * @param \CachetHQ\Cachet\Models\Component $component
      *
-     * @return \CachetHQ\Cachet\Models\Component
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function putComponent($id)
+    public function putComponent(Component $component)
     {
-        $component = $this->component->update($id, Binput::except('tags'));
+        try {
+            $component->update(Binput::except('tags'));
+        } catch (Exception $e) {
+            throw new BadRequestHttpException();
+        }
 
         if (Binput::has('tags')) {
             $tags = preg_split('/ ?, ?/', Binput::get('tags'));
 
             // For every tag, do we need to create it?
             $componentTags = array_map(function ($taggable) use ($component) {
-                return Tag::firstOrCreate([
-                    'name' => $taggable,
-                ])->id;
+                return Tag::firstOrCreate(['name' => $taggable])->id;
             }, $tags);
 
             $component->tags()->sync($componentTags);
@@ -121,13 +113,13 @@ class ComponentController extends AbstractApiController
     /**
      * Delete an existing component.
      *
-     * @param int $id
+     * @param \CachetHQ\Cachet\Models\Component $component
      *
-     * @return \Dingo\Api\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function deleteComponent($id)
+    public function deleteComponent(Component $component)
     {
-        $this->component->destroy($id);
+        $component->delete();
 
         return $this->noContent();
     }

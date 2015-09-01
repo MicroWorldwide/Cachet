@@ -10,19 +10,7 @@
                     </div>
                 </div>
                 <div class="col-xs-10 col-xs-offset-2 col-sm-11 col-sm-offset-0">
-                    <div class="panel panel-message">
-                        <div class="panel-heading">
-                            <strong>{{ $incident->name }}</strong>{{ $incident->isScheduled ? trans("cachet.incidents.scheduled_at", ["timestamp" => $incident->scheduled_at_diff]) : null }}
-                            <br>
-                            <small class="date">
-                                <abbr class="timeago" data-toggle="tooltip" data-placement="right" title="{{ $incident->created_at_formatted }}" data-timeago="{{ $incident->created_at_iso }}">
-                                </abbr>
-                            </small>
-                        </div>
-                        <div class="panel-body">
-                            {!! $incident->formattedMessage !!}
-                        </div>
-                    </div>
+                    @include('partials.incident', ['incident' => $incident, 'with_link' => true])
                 </div>
             </div>
         </div>

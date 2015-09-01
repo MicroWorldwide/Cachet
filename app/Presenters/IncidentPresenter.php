@@ -3,7 +3,7 @@
 /*
  * This file is part of Cachet.
  *
- * (c) Cachet HQ <support@cachethq.io>
+ * (c) Alt Three Services Limited
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -160,7 +160,7 @@ class IncidentPresenter extends AbstractPresenter
     public function toArray()
     {
         return array_merge($this->wrappedObject->toArray(), [
-            'scheduled_at' => $this->created_at(),
+            'scheduled_at' => $this->scheduled_at(),
             'created_at'   => $this->created_at(),
             'updated_at'   => $this->updated_at(),
         ]);

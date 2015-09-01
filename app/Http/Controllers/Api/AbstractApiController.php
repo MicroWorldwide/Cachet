@@ -3,7 +3,7 @@
 /*
  * This file is part of Cachet.
  *
- * (c) Cachet HQ <support@cachethq.io>
+ * (c) Alt Three Services Limited
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -11,15 +11,15 @@
 
 namespace CachetHQ\Cachet\Http\Controllers\Api;
 
-use CachetHQ\Cachet\Http\Controllers\AbstractController as BaseController;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Response;
 use McCool\LaravelAutoPresenter\Facades\AutoPresenter;
 
-abstract class AbstractApiController extends BaseController
+abstract class AbstractApiController extends Controller
 {
     /**
      * The HTTP response headers.
@@ -147,19 +147,27 @@ abstract class AbstractApiController extends BaseController
 
         $pagination = [
             'pagination' => [
-                'total'         => $paginator->total(),
-                'count'         => count($paginator->items()),
-                'per_page'      => $paginator->perPage(),
-                'current_page'  => $paginator->currentPage(),
-                'total_pages'   => $paginator->lastPage(),
-                'links'         => [
+                'total'        => $paginator->total(),
+                'count'        => count($paginator->items()),
+                'per_page'     => $paginator->perPage(),
+                'current_page' => $paginator->currentPage(),
+                'total_pages'  => $paginator->lastPage(),
+                'links'        => [
                     'next_page'     => $paginator->nextPageUrl(),
                     'previous_page' => $paginator->previousPageUrl(),
                 ],
             ],
         ];
 
-        return $this->setMetaData($pagination)->setData(AutoPresenter::decorate($paginator->getCollection()))->respond();
+        $items = $paginator->getCollection();
+
+        if ($sortBy = $request->get('sort')) {
+            $direction = $request->has('order') && $request->get('order') == 'desc';
+
+            $items = $items->sortBy($sortBy, SORT_REGULAR, $direction);
+        }
+
+        return $this->setMetaData($pagination)->setData(AutoPresenter::decorate($items->values()->all()))->respond();
     }
 
     /**

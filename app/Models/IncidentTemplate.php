@@ -3,7 +3,7 @@
 /*
  * This file is part of Cachet.
  *
- * (c) Cachet HQ <support@cachethq.io>
+ * (c) Alt Three Services Limited
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -11,30 +11,23 @@
 
 namespace CachetHQ\Cachet\Models;
 
+use AltThree\Validator\ValidatingTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
-use Watson\Validating\ValidatingTrait;
 
-/**
- * @property int            $id
- * @property string         $name
- * @property string         $slug
- * @property string         $template
- * @property \Carbon\Carbon $created_at
- * @property \Carbon\Carbon $updated_at
- */
 class IncidentTemplate extends Model
 {
     use ValidatingTrait;
 
     /**
-     * The validation rules.
+     * The attributes that should be casted to native types.
      *
      * @var string[]
      */
-    protected $rules = [
-        'name'     => 'required',
-        'template' => 'required',
+    protected $casts = [
+        'id'       => 'int',
+        'name'     => 'string',
+        'template' => 'string',
     ];
 
     /**
@@ -43,6 +36,16 @@ class IncidentTemplate extends Model
      * @var string[]
      */
     protected $fillable = ['name', 'template'];
+
+    /**
+     * The validation rules.
+     *
+     * @var string[]
+     */
+    public $rules = [
+        'name'     => 'required',
+        'template' => 'required',
+    ];
 
     /**
      * Overrides the models boot method.

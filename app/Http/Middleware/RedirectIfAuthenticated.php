@@ -3,7 +3,7 @@
 /*
  * This file is part of Cachet.
  *
- * (c) Cachet HQ <support@cachethq.io>
+ * (c) Alt Three Services Limited
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -18,16 +18,16 @@ use Illuminate\Http\RedirectResponse;
 class RedirectIfAuthenticated
 {
     /**
-     * The Guard implementation.
+     * The authentication guard instance.
      *
-     * @var Guard
+     * @var \Illuminate\Contracts\Auth\Guard
      */
     protected $auth;
 
     /**
-     * Create a new filter instance.
+     * Create a new redirect if authenticated middleware instance.
      *
-     * @param Guard $auth
+     * @param \Illuminate\Contracts\Auth\Guard $auth
      */
     public function __construct(Guard $auth)
     {

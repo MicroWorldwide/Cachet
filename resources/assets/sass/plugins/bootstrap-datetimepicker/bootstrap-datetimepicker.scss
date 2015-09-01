@@ -1,5 +1,5 @@
 // Import boostrap variables including default color palette and fonts
-@import "./bower_components/bootstrap-sass/assets/stylesheets/bootstrap/_variables";
+@import "./vendor/bower_components/bootstrap-sass/assets/stylesheets/bootstrap/_variables";
 
 .bootstrap-datetimepicker-widget {
     list-style: none;
@@ -326,15 +326,4 @@
     & .input-group-addon {
         cursor: pointer;
     }
-}
-
-.sr-only {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    margin: -1px;
-    padding: 0;
-    overflow: hidden;
-    clip: rect(0,0,0,0);
-    border: 0;
 }

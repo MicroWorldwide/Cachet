@@ -3,7 +3,7 @@
 /*
  * This file is part of Cachet.
  *
- * (c) Cachet HQ <support@cachethq.io>
+ * (c) Alt Three Services Limited
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -13,56 +13,85 @@ return [
     // Components
     'components' => [
         'status' => [
-            1 => 'Online',
-            2 => 'Verminderde prestaties',
-            3 => 'Gedeeltelijke storing',
-            4 => 'Grote storing',
+            1 => 'Operationeel',
+            2 => 'Prestatieproblemen',
+            3 => 'Gedeeltelijke Storing',
+            4 => 'Grote Storing',
         ],
     ],
 
     // Incidents
     'incidents' => [
         'none'          => 'Geen incidenten gemeld.',
-        'past'          => 'Eerdere incidenten',
+        'past'          => 'Incidenten in het verleden',
         'previous_week' => 'Vorige week',
         'next_week'     => 'Volgende week',
-        'none'          => 'Niets te melden.',
+        'none'          => 'Geen incidenten gemeld.',
         'scheduled'     => 'Gepland onderhoud',
         'scheduled_at'  => ', gepland :timestamp',
         'status'        => [
             0 => 'Gepland', // TODO: Hopefully remove this.
-            1 => 'Onderzoeken',
+            1 => 'In onderzoek',
             2 => 'Geïdentificeerd',
-            3 => 'Bekijken',
+            3 => 'Aan het opvolgen',
             4 => 'Opgelost',
         ],
     ],
 
     // Service Status
     'service' => [
-        'good' => 'Alle systemen zijn online',
-        'bad'  => 'Sommige systemen hebben problemen',
+        'good' => 'Alle systemen werken correct.',
+        'bad'  => 'Sommige systemen ondervinden problemen.',
     ],
 
     'api' => [
-        'regenerate' => 'API-sleutel hergenereren',
-        'revoke'     => 'API-sleutel intrekken',
+        'regenerate' => 'Hergenereer API-sleutel',
+        'revoke'     => 'API-sleutel Intrekken',
     ],
 
     // Metrics
     'metrics' => [
         'filter' => [
-            'hourly'  => 'Elk uur',
-            'daily'   => 'Dagelijks',
-            'monthly' => 'Maandelijks',
+            'hourly'  => 'Last 12 Hours',
+            'weekly'  => 'Week',
+            'monthly' => 'Month',
+        ],
+    ],
+
+    // Subscriber
+    'subscriber' => [
+        'subscribe' => 'Abonneer voor de meest recente updates.',
+        'button'    => 'Abonneer',
+        'email'     => [
+            'subscribe'    => 'Abonneren op e-mail updates.',
+            'subscribed'   => 'U bent geabonneerd op e-mailmeldingen, controleer uw e-mail om uw abonnement te bevestigen.',
+            'verified'     => 'Uw e-mail abonnement is bevestigd. Bedankt!',
+            'unsubscribe'  => 'Afmelden voor e-mail updates.',
+            'unsubscribed' => 'Uw e-mail abonnement is opgezegd.',
+            'failure'      => 'Er ging ging iets fout tijdens het aanmelden.',
+            'verify'       => [
+                'text'           => 'Bevestig uw e-mail abonnement op :app_name status updates.\\n:link\\nBedankt, :app_name',
+                'html-preheader' => 'Bevestig uw e-mail abonnement op :app_name status updates.',
+                'html'           => '',
+            ],
+            'maintenance' => [
+                'text'           => 'Nieuwe onderhoud is gepland voor :app_name.\\nBedankt, :app_name',
+                'html-preheader' => 'Nieuw onderhoud is gepland voor :app_name.',
+                'html'           => '',
+            ],
+            'incident' => [
+                'text'           => 'Nieuw incident is aangemeld op :app_name.\\nBedankt, :app_name',
+                'html-preheader' => 'Nieuw incident aangemeld op :app_name.',
+                'html'           => '<p>Nieuw incident aangemeld op :app_name.</p><p>Bedankt, :app_name</p>',
+            ],
         ],
     ],
 
     // Other
-    'powered_by'      => 'De statuspagina van :app is mogelijk gemaakt door <a href="https://cachethq.io">Cachet</a>.',
+    'powered_by'      => ': app statuspagina wordt mogelijk gemaakt door <a href="https://cachethq.github.io"> Cachet</a>.',
     'about_this_site' => 'Over deze site',
-    'rss-feed'        => 'RSS-feed',
-    'atom-feed'       => 'Atom-feed',
-    'feed'            => 'Statusfeed',
+    'rss-feed'        => 'RSS',
+    'atom-feed'       => 'Atom',
+    'feed'            => 'Status Feed',
 
 ];

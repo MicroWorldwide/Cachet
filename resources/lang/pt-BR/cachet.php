@@ -3,7 +3,7 @@
 /*
  * This file is part of Cachet.
  *
- * (c) Cachet HQ <support@cachethq.io>
+ * (c) Alt Three Services Limited
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -52,9 +52,38 @@ return [
     // Metrics
     'metrics' => [
         'filter' => [
-            'hourly'  => '',
-            'daily'   => '',
-            'monthly' => '',
+            'hourly'  => 'Last 12 Hours',
+            'weekly'  => 'Week',
+            'monthly' => 'Month',
+        ],
+    ],
+
+    // Subscriber
+    'subscriber' => [
+        'subscribe' => 'Subscribe to get the most recent updates.',
+        'button'    => 'Subscribe',
+        'email'     => [
+            'subscribe'    => 'Subscribe to email updates.',
+            'subscribed'   => 'You\'ve been subscribed to email notifications, please check your email to confirm your subscription.',
+            'verified'     => 'Your email subscription has been confirmed. Thank you!',
+            'unsubscribe'  => 'Unsuscribe from email updates.',
+            'unsubscribed' => 'Your email subscription has been cancelled.',
+            'failure'      => 'Something went wrong with the subscription.',
+            'verify'       => [
+                'text'           => "Please confirm your email subscription to :app_name status updates.\n:link\nThank you, :app_name",
+                'html-preheader' => 'Please confirm your email subscription to :app_name status updates.',
+                'html'           => '<p>Please confirm your email subscription to :app_name status updates.</p><p><a href=":link">:link</a></p><p>Thank you, :app_name</p>',
+            ],
+            'maintenance' => [
+                'text'           => "New maintenance has been scheduled on :app_name.\nThank you, :app_name",
+                'html-preheader' => 'New maintenance has been scheduled on :app_name.',
+                'html'           => '<p>New maintenance has been scheduled on :app_name.</p><p>Thank you, :app_name</p>',
+            ],
+            'incident' => [
+                'text'           => "New incident has been reported on :app_name.\nThank you, :app_name",
+                'html-preheader' => 'New incident has been reported on :app_name.',
+                'html'           => '<p>New incident has been reported on :app_name.</p><p>Thank you, :app_name</p>',
+            ],
         ],
     ],
 

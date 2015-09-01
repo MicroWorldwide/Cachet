@@ -3,7 +3,7 @@
 /*
  * This file is part of Cachet.
  *
- * (c) Cachet HQ <support@cachethq.io>
+ * (c) Alt Three Services Limited
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -84,18 +84,20 @@ return [
     'settings' => [
         /// Application setup
         'app-setup' => [
-            'site-name'           => 'Nome do site',
-            'site-url'            => 'URL do site',
-            'site-timezone'       => 'Fuso horário do site',
-            'site-locale'         => 'Idioma do site',
-            'date-format'         => 'Formato da Data',
-            'display-graphs'      => '',
-            'about-this-page'     => 'Sobre esta página',
-            'days-of-incidents'   => 'Quantos dias de incidentes para mostrar?',
-            'banner'              => 'Imagem do banner',
-            'banner-help'         => 'É recomendável que você faça upload de arquivos menores que 930px .',
-            'analytics_google'    => 'Google Analytics code',
-            'analytics_gosquared' => 'GoSquared Analytics code',
+            'site-name'              => 'Nome do site',
+            'site-url'               => 'URL do site',
+            'site-timezone'          => 'Fuso horário do site',
+            'site-locale'            => 'Idioma do site',
+            'date-format'            => 'Formato da Data',
+            'display-graphs'         => '',
+            'about-this-page'        => 'Sobre esta página',
+            'days-of-incidents'      => 'Quantos dias de incidentes para mostrar?',
+            'banner'                 => 'Imagem do banner',
+            'banner-help'            => 'É recomendável que você faça upload de arquivos menores que 930px .',
+            'analytics_google'       => 'Google Analytics code',
+            'analytics_gosquared'    => 'GoSquared Analytics code',
+            'analytics_piwik_url'    => 'URL of your Piwik instance (without http(s)://)',
+            'analytics_piwik_siteid' => 'Piwik\'s site id',
         ],
         'security' => [
             'allowed-domains'      => 'Domínios permitidos',
@@ -107,6 +109,7 @@ return [
         'theme' => [
             'background-color' => 'Cor de fundo',
             'text-color'       => 'Cor do Texto',
+            'dashboard-login'  => 'Show dashboard button in the footer?',
         ],
     ],
 

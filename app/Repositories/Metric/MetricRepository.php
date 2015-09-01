@@ -3,7 +3,7 @@
 /*
  * This file is part of Cachet.
  *
- * (c) Cachet HQ <support@cachethq.io>
+ * (c) Alt Three Services Limited
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -11,51 +11,100 @@
 
 namespace CachetHQ\Cachet\Repositories\Metric;
 
-interface MetricRepository
+use CachetHQ\Cachet\Facades\Setting as SettingFacade;
+use CachetHQ\Cachet\Models\Metric;
+use DateInterval;
+use Jenssegers\Date\Date;
+
+class MetricRepository
 {
     /**
-     * Returns all models.
+     * Metric repository.
      *
-     * @return \Illuminate\Database\Eloquent\Collection
+     * @var \CachetHQ\Cachet\Repositories\Metric\MetricInterface
      */
-    public function all();
+    protected $repository;
 
     /**
-     * Returns all metric point models.
+     * The timezone the status page is showing in.
      *
-     * @param int $id
-     *
-     * @return \Illuminate\Database\Eloquent\Collection
+     * @var string
      */
-    public function points($id);
+    protected $dateTimeZone;
 
     /**
-     * Create a new model.
+     * Create a new metric repository class.
      *
-     * @param array $data
-     *
-     * @return \Illuminate\Database\Eloquent\Model
+     * @param \CachetHQ\Cachet\Repositories\Metric\MetricInterface $repository
      */
-    public function create(array $data);
+    public function __construct(MetricInterface $repository)
+    {
+        $this->repository = $repository;
+        $this->dateTimeZone = SettingFacade::get('app_timezone');
+    }
 
     /**
-     * Finds a model by id.
+     * Returns all points as an array, by x hours.
      *
-     * @param int $id
+     * @param \CachetHQ\Cachet\Models\Metric $metric
+     * @param int                            $hours
      *
-     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
-     *
-     * @return \Illuminate\Database\Eloquent\Model
+     * @return array
      */
-    public function findOrFail($id);
+    public function listPointsToday(Metric $metric, $hours = 12)
+    {
+        $dateTime = (new Date())->setTimezone($this->dateTimeZone);
+        $points = [];
+
+        $pointKey = $dateTime->format('H:00');
+        for ($i = 0; $i <= $hours; $i++) {
+            $points[$pointKey] = $this->repository->getPointsByHour($metric, $i + 1);
+            $pointKey = $dateTime->sub(new DateInterval('PT1H'))->format('H:00');
+        }
+
+        return array_reverse($points);
+    }
 
     /**
-     * Update a model by id.
+     * Returns all points as an array, in the last week.
      *
-     * @param int   $id
-     * @param array $data
+     * @param \CachetHQ\Cachet\Models\Metric $metric
      *
-     * @return \Illuminate\Database\Eloquent\Model
+     * @return array
      */
-    public function update($id, array $data);
+    public function listPointsForWeek(Metric $metric)
+    {
+        $dateTime = (new Date())->setTimezone($this->dateTimeZone);
+        $points = [];
+
+        $pointKey = $dateTime->format('jS M');
+        for ($i = 0; $i <= 7; $i++) {
+            $points[$pointKey] = $this->repository->getPointsForDayInWeek($metric, $i);
+            $pointKey = $dateTime->sub(new DateInterval('P1D'))->format('D jS M');
+        }
+
+        return array_reverse($points);
+    }
+
+    /**
+     * Returns all points as an array, in the last month.
+     *
+     * @param \CachetHQ\Cachet\Models\Metric $metric
+     *
+     * @return array
+     */
+    public function listPointsForMonth(Metric $metric)
+    {
+        $dateTime = (new Date())->setTimezone($this->dateTimeZone);
+        $daysInMonth = $dateTime->format('t');
+        $points = [];
+
+        $pointKey = $dateTime->format('jS M');
+        for ($i = 0; $i <= $daysInMonth; $i++) {
+            $points[$pointKey] = $this->repository->getPointsForDayInWeek($metric, $i);
+            $pointKey = $dateTime->sub(new DateInterval('P1D'))->format('jS M');
+        }
+
+        return array_reverse($points);
+    }
 }

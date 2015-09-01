@@ -3,7 +3,7 @@
 /*
  * This file is part of Cachet.
  *
- * (c) Cachet HQ <support@cachethq.io>
+ * (c) Alt Three Services Limited
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -14,9 +14,12 @@ namespace CachetHQ\Cachet\Http\Controllers;
 use CachetHQ\Cachet\Facades\Setting;
 use CachetHQ\Cachet\Models\ComponentGroup;
 use CachetHQ\Cachet\Models\Incident;
+use GrahamCampbell\Markdown\Facades\Markdown;
+use Illuminate\Routing\Controller;
+use Illuminate\Support\Str;
 use Roumen\Feed\Facades\Feed;
 
-class AtomController extends AbstractController
+class AtomController extends Controller
 {
     /**
      * Generates an Atom feed of all incidents.
@@ -30,18 +33,18 @@ class AtomController extends AbstractController
         $feed = Feed::make();
         $feed->title = Setting::get('app_name');
         $feed->description = trans('cachet.feed');
-        $feed->link = Setting::get('app_domain');
+        $feed->link = Str::canonicalize(Setting::get('app_domain'));
 
         $feed->setDateFormat('datetime');
 
-        if ($group) {
+        if ($group->exists) {
             $group->components->map(function ($component) use ($feed) {
-                $component->incidents()->orderBy('created_at', 'desc')->get()->map(function ($incident) use ($feed) {
+                $component->incidents()->visible()->orderBy('created_at', 'desc')->get()->map(function ($incident) use ($feed) {
                     $this->feedAddItem($feed, $incident);
                 });
             });
         } else {
-            Incident::orderBy('created_at', 'desc')->get()->map(function ($incident) use ($feed) {
+            Incident::visible()->orderBy('created_at', 'desc')->get()->map(function ($incident) use ($feed) {
                 $this->feedAddItem($feed, $incident);
             });
         }
@@ -52,17 +55,19 @@ class AtomController extends AbstractController
     /**
      * Adds an item to the feed.
      *
-     * @param Roumen\Feed\Facades\Feed         $feed
+     * @param \Roumen\Feed\Facades\Feed        $feed
      * @param \CachetHQ\Cachet\Models\Incident $incident
+     *
+     * @return void
      */
     private function feedAddItem(&$feed, $incident)
     {
         $feed->add(
             $incident->name,
             Setting::get('app_name'),
-            Setting::get('app_domain'),
+            Str::canonicalize(route('incident', ['id' => $incident->id])),
             $incident->created_at->toAtomString(),
-            $incident->message
+            Markdown::convertToHtml($incident->message)
         );
     }
 }
